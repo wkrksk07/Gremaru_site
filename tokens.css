@@ -1,0 +1,150 @@
+/* design-harness:tokens mode=showcase
+   쇼케이스 모드 — 게임·작품 아트워크가 주인공인 동아리·팀·대회 출품 사이트(기준: I2P X O2CUBE, 2026-10-17 실측).
+   기본은 흰 바탕의 라이트. 깊이는 "은은한" 앰비언트 글로우(알파 5%)·글래스 GNB·카드 소프트 섀도우·하단 스크림으로 낸다.
+   장식 속성은 전부 이 파일의 토큰으로만 쓴다.
+   실측: 배경 #fff · 구획 #f1f5f9 · 글자 #111/#666 · 강조 #0055ff · GNB rgba(255,255,255,.9)+blur 20px ·
+   히어로 radial-gradient 알파 .05 · 카드 radius 12 + 0 10 25 rgba(0,0,0,.06) · 캐러셀 0 15 40 rgba(0,0,0,.08) ·
+   버튼 radius 4(채움 #111 / 윤곽 2px #111) · 제목 Pretendard 900, 자간 -0.32px, h1 72 / h2 40 · 마퀴 호버 정지.
+   다크 값과 stage 색은 실측이 없는 임시안이다. 색 토큰은 반드시 --c- 로 시작한다 (검사기가 이 접두사로 팔레트를 만든다). */
+:root {
+  color-scheme: light;
+
+  --font-sans: "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; /* 영문 전용 디스플레이(Outfit 등)를 앞에 붙이는 것은 허용 */
+  --fw-body: 400;
+  --fw-ui: 600;
+  --fw-heading: 700;
+  --fw-display: 900;
+
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 24px;
+  --fs-2xl: 40px;
+  --fs-display: clamp(44px, 8vw, 72px);
+  --ls-tight: -0.32px;
+  --lh-tight: 1.05;
+  --lh-heading: 1.25;
+  --lh-body: 1.65;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  --radius-btn: 4px;
+  --radius: 12px;
+  --radius-pill: 999px;
+  --line-w-strong: 2px;
+  --line-w: 1px;
+  --control-h: 44px;
+  --content-max: 1280px;
+  --ratio-art: 16 / 9;
+  --ratio-poster: 1 / 1.414;
+  --w-card-marquee: 380px;
+  --w-card-marquee-sm: 290px;
+  --w-modal: 1100px;
+  --h-carousel: 360px;
+  --h-carousel-wide: 420px;
+  --ls-label: 0.08em;
+  --op-watermark: 0.25;
+  --blur-overlay: 8px;
+  --blur-btn: 10px;
+  --timeline-line: 4px;
+  --timeline-dot: 20px;
+  --hit-dot: 44px;
+
+  /* 모션 — 전환은 짧게, 상시 움직임은 마퀴 하나만. prefers-reduced-motion 에서는 전부 끈다. */
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --lift-y: -2px;
+  --zoom-card: 1.05;
+  --marquee-dur: 35s;
+  --marquee-dur-sm: 25s;
+  --bg-scroll-dur: 50s;
+  --edge-fade: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+
+  /* 깊이 — 글로우·글래스·스크림 */
+  --blur-glass: 20px;
+  --glow-soft: 0 0 30px var(--c-glow);
+  --shadow-lift: 0 15px 40px var(--c-shadow-lift);
+  --glow-logo: drop-shadow(0 0 30px var(--c-glow));
+  --shadow-card: 0 10px 25px var(--c-shadow);
+  --grad-ambient: radial-gradient(circle at 50% 0%, var(--c-ambient), transparent 60%);
+  --shadow-card-hover: 0 14px 32px var(--c-glow);
+  --grad-scrim: linear-gradient(to top, var(--c-scrim), transparent);
+
+  --c-bg: #ffffff;
+  --c-bg-section: #f1f5f9;
+  --c-surface: #f8fafc;
+  --c-glass: rgba(255, 255, 255, 0.9);
+  --c-ink: #111111;
+  --c-ink-muted: #666666;
+  --c-line: #e5e8ec;
+  --c-line-strong: #111111;
+  --c-accent: #0055ff;
+  --c-accent-hover: #003cc8;
+  --c-accent-text: #ffffff;
+  --c-accent-soft: #e6edff;
+  --c-glow: rgba(0, 85, 255, 0.25);
+  --c-ambient: rgba(0, 85, 255, 0.05);
+  --c-shadow: rgba(0, 0, 0, 0.06);
+  --c-shadow-lift: rgba(0, 0, 0, 0.08);
+  --c-scrim: rgba(11, 15, 25, 0.85);
+  --c-stage: #0b0f19;
+  --c-stage-ink: #f2f5ff;
+  --c-stage-muted: #a9b4cc;
+  --c-stage-subtle: #94a3b8; /* 스크림·stage 위 전용. 흰 바탕 위 금지(2.6:1) */
+  --c-btn-glass: rgba(255, 255, 255, 0.18);
+  --c-overlay: rgba(2, 6, 23, 0.7);
+  --c-scroll-thumb: #cbd5e1;
+
+  /* 의미색 — 이벤트 유형 5 + 중요 1. 흰 글자 대비 4.5:1 이상으로 원본 값을 보정했다. */
+  --c-event-exam: #be185d;
+  --c-event-gathering: #047857;
+  --c-event-presentation: #6d28d9;
+  --c-event-holiday: #475569;
+  --c-important: #b91c1c;
+  --c-important-soft: #fdecec;
+  --c-ok: #047857;
+  --c-ok-soft: #e7f6ef;
+
+  /* 외부 채널 — 호버 시 테두리·아이콘에만 쓴다(글자색 금지) */
+  --c-channel-steam: #171a21;
+  --c-channel-itch: #fa5c5c;
+  --c-channel-gameping: #6366f1;
+  --c-channel-youtube: #ff0000;
+}
+
+/* 다크는 파생 테마 — 같은 이름만 덮는다. 아트워크를 얹는 stage 는 두 테마에서 같다. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-bg: #0b0f19;
+  --c-bg-section: #111827;
+  --c-surface: #141b2b;
+  --c-glass: rgba(11, 15, 25, 0.9);
+  --c-ink: #eef2ff;
+  --c-ink-muted: #a9b4cc;
+  --c-line: #26304a;
+  --c-line-strong: #eef2ff;
+  --c-accent: #6f9bff;
+  --c-accent-hover: #9bb8ff;
+  --c-accent-text: #07102a;
+  --c-accent-soft: #17233d;
+  --c-glow: rgba(111, 155, 255, 0.3);
+  --c-ambient: rgba(111, 155, 255, 0.08);
+  --c-shadow: rgba(0, 0, 0, 0.4);
+  --c-shadow-lift: rgba(0, 0, 0, 0.5);
+  --c-important: #f87171;
+  --c-important-soft: #3a1618;
+  --c-ok: #34d399;
+  --c-ok-soft: #10281f;
+  --c-scroll-thumb: #3a4560;
+}
